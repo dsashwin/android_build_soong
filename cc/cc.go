@@ -2498,7 +2498,6 @@ func (c *Module) DepsMutator(actx android.BottomUpMutatorContext) {
 			}
 			return newHeaderLibs
 		}
-
 		deps.HeaderLibs = rewriteHeaderLibs(deps.HeaderLibs)
 
 		deps.SharedLibs, variantNdkLibs = RewriteLibs(c, &snapshotInfo, actx, ctx.Config(), deps.SharedLibs)

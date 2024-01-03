@@ -228,11 +228,8 @@ func (c *Cmd) wrapSandbox() {
 		sandboxArgs = append(sandboxArgs, "-N")
 	}
 
-	if ccacheExec := os.Getenv("CCACHE_EXEC"); ccacheExec != "" {
-		bytes, err := exec.Command(ccacheExec, "-k", "cache_dir").Output()
-		if err == nil {
-			sandboxArgs = append(sandboxArgs, "-B", strings.TrimSpace(string(bytes)))
-		}
+	if ccacheDir := os.Getenv("CCACHE_DIR"); ccacheDir != "" {
+		sandboxArgs = append(sandboxArgs, "-B", ccacheDir)
 	}
 
 	// Stop nsjail from parsing arguments

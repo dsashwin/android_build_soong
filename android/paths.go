@@ -1083,7 +1083,7 @@ func pathForSource(ctx PathContext, pathComponents ...string) (SourcePath, error
 
 // pathForSourceRelaxed creates a SourcePath from pathComponents, but does not check that it exists.
 // It differs from pathForSource in that the path is allowed to exist outside of the PathContext.
-func pathForSourceRelaxed(ctx PathContext, pathComponents ...string) (SourcePath, error) {
+func pathForSourceRelaxed(ctx PathGlobContext, pathComponents ...string) (SourcePath, error) {
 	p := filepath.Join(pathComponents...)
 	ret := SourcePath{basePath{p, ""}}
 
@@ -1151,10 +1151,25 @@ func PathForSource(ctx PathContext, pathComponents ...string) SourcePath {
 	return path
 }
 
+// MaybeExistentPathForSource joins the provided path components and validates that the result
+// neither escapes the source dir nor is in the out dir.
+// It does not validate whether the path exists.
+func MaybeExistentPathForSource(ctx PathContext, pathComponents ...string) SourcePath {
+	path, err := pathForSource(ctx, pathComponents...)
+	if err != nil {
+		reportPathError(ctx, err)
+	}
+
+	if pathtools.IsGlob(path.String()) {
+		ReportPathErrorf(ctx, "path may not contain a glob: %s", path.String())
+	}
+	return path
+}
+
 // PathForSourceRelaxed joins the provided path components.  Unlike PathForSource,
 // the result is allowed to exist outside of the source dir.
 // On error, it will return a usable, but invalid SourcePath, and report a ModuleError.
-func PathForSourceRelaxed(ctx PathContext, pathComponents ...string) SourcePath {
+func PathForSourceRelaxed(ctx PathGlobContext, pathComponents ...string) SourcePath {
 	path, err := pathForSourceRelaxed(ctx, pathComponents...)
 	if err != nil {
 		reportPathError(ctx, err)
@@ -1172,21 +1187,6 @@ func PathForSourceRelaxed(ctx PathContext, pathComponents ...string) SourcePath 
 		ReportPathErrorf(ctx, "%s: %s", path, err.Error())
 	} else if !exists {
 		ReportPathErrorf(ctx, "source path %s does not exist", path)
-	}
-	return path
-}
-
-// MaybeExistentPathForSource joins the provided path components and validates that the result
-// neither escapes the source dir nor is in the out dir.
-// It does not validate whether the path exists.
-func MaybeExistentPathForSource(ctx PathContext, pathComponents ...string) SourcePath {
-	path, err := pathForSource(ctx, pathComponents...)
-	if err != nil {
-		reportPathError(ctx, err)
-	}
-
-	if pathtools.IsGlob(path.String()) {
-		ReportPathErrorf(ctx, "path may not contain a glob: %s", path.String())
 	}
 	return path
 }

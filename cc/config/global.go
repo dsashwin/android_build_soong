@@ -101,6 +101,7 @@ var (
 
 		// Warnings from clang-12
 		"-Wno-gnu-folding-constant",
+		"-Wno-compound-token-split-by-macro",
 
 		// Calls to the APIs that are newer than the min sdk version of the caller should be
 		// guarded with __builtin_available.
@@ -140,9 +141,6 @@ var (
 		"-Werror=format-security",
 		"-nostdlibinc",
 
-		// Enable MLGO for register allocation.
-		"-mllvm -regalloc-enable-advisor=release",
-
 		// Emit additional debug info for AutoFDO
 		"-fdebug-info-for-profiling",
 	}
@@ -169,8 +167,6 @@ var (
 		"-Wl,--exclude-libs,libgcc_stripped.a",
 		"-Wl,--exclude-libs,libunwind_llvm.a",
 		"-Wl,--exclude-libs,libunwind.a",
-		// Enable MLGO for register allocation.
-		"-Wl,-mllvm,-regalloc-enable-advisor=release",
 	}
 
 	deviceGlobalLldflags = append(deviceGlobalLdflags, commonGlobalLldflags...)
@@ -310,7 +306,7 @@ var (
 
 	// prebuilts/clang default settings.
 	ClangDefaultBase         = "prebuilts/clang/host"
-	ClangDefaultVersion      = "clang-r498229b"
+	ClangDefaultVersion      = "clang-r487747c"
 	ClangDefaultShortVersion = "17"
 
 	// Directories with warnings from Android.bp files.

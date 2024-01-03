@@ -381,7 +381,6 @@ var (
 		"system/tools/xsdc/utils":                                Bp2BuildDefaultTrueRecursively,
 		"system/unwinding/libunwindstack":                        Bp2BuildDefaultTrueRecursively,
 
-		"toolchain/pgo-profiles":                      Bp2BuildDefaultTrueRecursively,
 		"tools/apifinder":                            Bp2BuildDefaultTrue,
 		"tools/apksig":                               Bp2BuildDefaultTrue,
 		"tools/external_updater":                     Bp2BuildDefaultTrueRecursively,
